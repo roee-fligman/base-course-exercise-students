@@ -1,28 +1,39 @@
 package iaf.ofek.hadracha.base_course.web_server.EjectedPilotRescue;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import iaf.ofek.hadracha.base_course.web_server.Data.CrudDataBase;
-
+import java.util.List;
+import iaf.ofek.hadracha.base_course.web_server.Data.InMemoryMapDataBase;
 
 @RestController
-@RequestMapping("ejectedPilotRescue")
+@RequestMapping("/ejectedPilotRescue")
 public class EjectedControler {
 
-    private CrudDataBase dataBase;
-	
-	public EjectedControler(@Autowired CrudDataBase dataBase) {
-		this.dataBase = dataBase;
+	InMemoryMapDataBase database;
+	AirplanesAllocationManager airplanesAllocationManager;
+
+	public EjectedControler(@Autowired InMemoryMapDataBase database,
+			@Autowired AirplanesAllocationManager airplanesAllocationManager) {
+		this.airplanesAllocationManager = airplanesAllocationManager;
+		this.database = database;
 	}
-	
+
 	@GetMapping("/infos")
-	public List<EjectedPilotInfo> sendEjectionToClient() {
-		return dataBase.getAllOfType(EjectedPilotInfo.class);
+	public List<EjectedPilotInfo> SendEjectionToPilot() {
+		return database.getAllOfType(EjectedPilotInfo.class);
+	}
+
+	@GetMapping("/takeResponsiblity")
+	public void TakeResponsiblity(@RequestParam int ejectedId,
+		@CookieValue(value = "client-id", defaultValue = "") String clientId) {
+		EjectedPilotInfo _ejectedPilotInfo = database.getByID(ejectedId, EjectedPilotInfo.class);
+		if (_ejectedPilotInfo.rescuedBy == null) _ejectedPilotInfo.rescuedBy = clientId;
+		database.update(_ejectedPilotInfo);
+		airplanesAllocationManager.allocateAirplanesForEjection(_ejectedPilotInfo, clientId);
 	}
 
 }
