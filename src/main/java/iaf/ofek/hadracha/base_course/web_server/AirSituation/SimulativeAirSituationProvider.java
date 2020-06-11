@@ -26,7 +26,7 @@ public class SimulativeAirSituationProvider implements AirSituationProvider {
   private static final double LON_MAX = 46.500;
   private static final double AZIMUTH_STEP = STEP_SIZE / (2000.0 / SIMULATION_INTERVAL_MILLIS);
   
-  private static final int MAX_NB_AIRPLANES = 80;
+  private static final int AIRPLANES_AMOUNT = 80;
   private static final double MAX_VELOCITY = 70.0;
   private static final double MIN_VELOCITY = 40.0;
   private static final double THRESHOLD_TO_DEST = 500.0;
@@ -51,7 +51,7 @@ public class SimulativeAirSituationProvider implements AirSituationProvider {
     this.randomGenerators = randomGenerators;
     this.geographicCalculations = geographicCalculations;
 
-    for (int i = 0; i < 80; i++) {
+    for (int i = 0; i < AIRPLANES_AMOUNT; i++) {
       addNewAirplane();
     }
 
