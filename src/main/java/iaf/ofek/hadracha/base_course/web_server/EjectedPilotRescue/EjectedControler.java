@@ -17,7 +17,7 @@ public class EjectedControler {
 	AirplanesAllocationManager airplanesAllocationManager;
 
 	public EjectedControler(@Autowired InMemoryMapDataBase database,
-			@Autowired AirplanesAllocationManager airplanesAllocationManager) {
+							@Autowired AirplanesAllocationManager airplanesAllocationManager) {
 		this.airplanesAllocationManager = airplanesAllocationManager;
 		this.database = database;
 	}
@@ -27,11 +27,10 @@ public class EjectedControler {
 		return database.getAllOfType(EjectedPilotInfo.class);
 	}
 
-	@GetMapping("/takeResponsiblity")
-	public void TakeResponsiblity(@RequestParam int ejectedId,
+	@GetMapping("/takeResponsibility")
+	public void TakeResponsibility(@RequestParam int ejectionId,
 								  @CookieValue(value = "client-id", defaultValue = "") String clientId) {
-        System.out.println("TESSTTTT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-		EjectedPilotInfo _ejectedPilotInfo = database.getByID(ejectedId, EjectedPilotInfo.class);
+		EjectedPilotInfo _ejectedPilotInfo = database.getByID(ejectionId, EjectedPilotInfo.class);
 		if (_ejectedPilotInfo.rescuedBy == null) _ejectedPilotInfo.rescuedBy = clientId;
 		database.update(_ejectedPilotInfo);
 		airplanesAllocationManager.allocateAirplanesForEjection(_ejectedPilotInfo, clientId);
