@@ -44,7 +44,7 @@ public class SimulativeAirSituationProvider implements AirSituationProvider {
     this.geographicCalculations = geographicCalculations;
 
     for (int i = 0; i < 80; i++) {
-      foo();
+      addNewAirplane();
     }
 
     executor.scheduleAtFixedRate(
@@ -54,7 +54,7 @@ public class SimulativeAirSituationProvider implements AirSituationProvider {
   // all airplane kinds that can be used
   private List<AirplaneKind> airplaneKinds = AirplaneKind.LeafKinds();
 
-  private void foo() {
+  private void addNewAirplane() {
     AirplaneKind kind = airplaneKinds.get(random.nextInt(airplaneKinds.size()));
     Airplane airplane = new Airplane(kind, lastId++);
     airplane.coordinates =
@@ -100,7 +100,7 @@ public class SimulativeAirSituationProvider implements AirSituationProvider {
             });
 
         if (random.nextDouble() < CHANCE_FOR_NUMBER_CHANGE) { // chance to add an airplane
-          foo();
+          addNewAirplane();
         }
       }
     } catch (Exception e) {
