@@ -55,8 +55,8 @@ public class EjectionsImporter {
 	}
 
 	private void executeUpdateEjections(List<EjectedPilotInfo> updatedEjections, List<EjectedPilotInfo> previousEjections) {
-		List<EjectedPilotInfo> addedEjections = ejectionsToAdd(updatedEjections, previousEjections);
-		List<EjectedPilotInfo> removedEjections = ejectionsToRemove(updatedEjections, previousEjections);
+		List<EjectedPilotInfo> addedEjections = substractEjections(updatedEjections, previousEjections);
+		List<EjectedPilotInfo> removedEjections = substractEjections(previousEjections, updatedEjections);
 		addedEjections.forEach(dataBase::create);
 		removedEjections.stream().map(EjectedPilotInfo::getId)
 				.forEach(id -> dataBase.delete(id, EjectedPilotInfo.class));
@@ -75,14 +75,9 @@ public class EjectionsImporter {
 				new ParameterizedTypeReference<List<EjectedPilotInfo>>() {
 				});
 	}
-
-	private List<EjectedPilotInfo> ejectionsToRemove(List<EjectedPilotInfo> updatedEjections,
-			List<EjectedPilotInfo> previousEjections) {
-		return listOperations.subtract(previousEjections, updatedEjections, new Entity.ByIdEqualizer<>());
-	}
-
-	private List<EjectedPilotInfo> ejectionsToAdd(List<EjectedPilotInfo> updatedEjections,
-			List<EjectedPilotInfo> previousEjections) {
-		return listOperations.subtract(updatedEjections, previousEjections, new Entity.ByIdEqualizer<>());
+	
+	private List<EjectedPilotInfo> substractEjections(List<EjectedPilotInfo> ejectionsBase,
+													  List<EjectedPilotInfo> ejectionsToDelete) {
+		return listOperations.subtract(ejectionsBase, ejectionsToDelete, new Entity.ByIdEqualizer<>());
 	}
 }
