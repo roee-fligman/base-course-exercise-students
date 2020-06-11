@@ -31,7 +31,7 @@ public class EjectedControler {
 	public void TakeResponsibility(@RequestParam int ejectionId,
 								  @CookieValue(value = "client-id", defaultValue = "") String clientId) {
 		EjectedPilotInfo _ejectedPilotInfo = database.getByID(ejectionId, EjectedPilotInfo.class);
-		if (_ejectedPilotInfo.rescuedBy == null) _ejectedPilotInfo.rescuedBy = clientId;
+		if (_ejectedPilotInfo.getRescuedBy() == null) _ejectedPilotInfo.setRescuedBy(clientId);
 		database.update(_ejectedPilotInfo);
 		airplanesAllocationManager.allocateAirplanesForEjection(_ejectedPilotInfo, clientId);
 	}
