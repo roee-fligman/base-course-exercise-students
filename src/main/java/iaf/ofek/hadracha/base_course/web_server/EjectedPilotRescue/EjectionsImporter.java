@@ -32,17 +32,21 @@ public class EjectionsImporter {
     public String NAMESPACE;
 
 
-
+    private AirplanesAllocationManager airplanesAllocationManager;
     private ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     private final RestTemplate restTemplate;
     private final CrudDataBase dataBase;
     private final ListOperations listOperations;
     private static final Double SHIFT_NORTH = 1.7;
 
-    public EjectionsImporter(RestTemplateBuilder restTemplateBuilder, CrudDataBase dataBase, ListOperations listOperations) {
+    public EjectionsImporter(RestTemplateBuilder restTemplateBuilder, 
+                             CrudDataBase dataBase, 
+                             ListOperations listOperations, 
+                             @Autowired AirplanesAllocationManager airplanesAllocationManager) {
         restTemplate = restTemplateBuilder.build();
         this.dataBase = dataBase;
         this.listOperations = listOperations;
+        this.airplanesAllocationManager = airplanesAllocationManager;
         executor.scheduleAtFixedRate(this::updateEjections, 1, 1, TimeUnit.SECONDS);
 
     }

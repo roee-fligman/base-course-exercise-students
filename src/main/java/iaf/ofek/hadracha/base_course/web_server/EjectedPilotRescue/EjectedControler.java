@@ -29,7 +29,8 @@ public class EjectedControler {
 
 	@GetMapping("/takeResponsiblity")
 	public void TakeResponsiblity(@RequestParam int ejectedId,
-		@CookieValue(value = "client-id", defaultValue = "") String clientId) {
+								  @CookieValue(value = "client-id", defaultValue = "") String clientId) {
+        System.out.println("TESSTTTT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		EjectedPilotInfo _ejectedPilotInfo = database.getByID(ejectedId, EjectedPilotInfo.class);
 		if (_ejectedPilotInfo.rescuedBy == null) _ejectedPilotInfo.rescuedBy = clientId;
 		database.update(_ejectedPilotInfo);
